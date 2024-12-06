@@ -8,11 +8,11 @@ This is the Rust version of [Coding Challenges](https://codingchallenges.fyi/cha
 
 ## Dependencies
 
-Only the [clap crate](https://crates.io/crates/clap).
+I use only the [clap crate](https://crates.io/crates/clap).
 
-## Installation of Programming Language Tools
+## Installation of the Rust Language
 
-First, the [Rust tools must be installed.](https://www.rust-lang.org/tools/install)
+[Rust must be installed.](https://www.rust-lang.org/tools/install)
 
 ## Usage and Output
 
@@ -21,13 +21,9 @@ Inside repo folder run this in a terminal:
 
 ```
 > cargo run -- .\test.txt
-   Compiling ccwc v0.1.0 (F:\Dev\cc-wc-rust)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.72s
-     Running `target\debug\ccwc.exe .\test.txt`
-Lines: 7145
-Words: 58164
-Bytes: 327900
-Characters: 325002
+   Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.05s
+   Running `target\debug\ccwc.exe .\test.txt`
+7145 58164 342190 339292 .\test.txt
 ```
 
 You can run help as well:
@@ -37,7 +33,7 @@ You can run help as well:
 > cargo run -- --help
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
      Running `target\debug\ccwc.exe --help`
-ccwc 0.1.0
+ccwc 0.2.0
 Counts words and various attributes of files
 
 USAGE:
@@ -55,14 +51,16 @@ OPTIONS:
     -w, --words      Count words
 ```
 
-## Known Bugs
-
-The `bytes` and `characters` are not matching the spec yet.
-
 ## License
 
 Read the [LICENSE file](LICENSE).
 
 ## History
 
-I started the project on 2nd of December, 2024.
+### 0.2.0 (6th December, 2024)
+
+I refactored the algorithm so the `bytes` and `characters` are matching the spec.
+
+### 0.1.0 (2nd of December, 2024)
+
+I started the project.
