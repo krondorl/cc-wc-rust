@@ -21,17 +21,18 @@ struct Options {
     print_chars: bool,
 }
 
-fn calculate_stats<R: BufRead>(reader: R) -> Stats {
+fn calculate_stats<R: BufRead>(reader: &mut R) -> Stats {
     let mut bytes_count: u64 = 0;
     let mut lines_count: u64 = 0;
     let mut words_count: u64 = 0;
     let mut chars_count: u64 = 0;
 
-    for line_result in reader.lines() {
-        match line_result {
-            Ok(line) => {
+    let mut line = String::new();
+    loop {
+        match reader.read_line(&mut line) {
+            Ok(0) => break, // End of file (no more bytes read)
+            Ok(_) => {
                 bytes_count += line.len() as u64;
-                lines_count += 1;
                 chars_count += line.chars().count() as u64;
 
                 let mut in_word = false;
@@ -49,9 +50,12 @@ fn calculate_stats<R: BufRead>(reader: R) -> Stats {
                 if in_word {
                     words_count += 1;
                 }
+
+                lines_count += 1;
+                line.clear(); // Clear the buffer for the next line
             }
-            Err(err) => {
-                eprintln!("Error reading line: {}", err);
+            Err(e) => {
+                eprintln!("Error reading line: {}", e);
                 break;
             }
         }
@@ -67,7 +71,7 @@ fn calculate_stats<R: BufRead>(reader: R) -> Stats {
 
 fn main() {
     let matches = Command::new("ccwc")
-        .version("0.1.0")
+        .version("0.2.0")
         .about("Counts words and various attributes of files")
         .arg(
             Arg::new("bytes")
@@ -124,19 +128,20 @@ fn main() {
 
     let path = Path::new(file_path);
     let file = File::open(path).expect("Unable to open file");
-    let reader = io::BufReader::new(file);
+    let mut reader = io::BufReader::new(file);
 
-    let stats = calculate_stats(reader);
+    let stats = calculate_stats(&mut reader);
     if options.print_lines {
-        println!("Lines: {}", stats.lines);
+        print!("{} ", stats.lines);
     }
     if options.print_words {
-        println!("Words: {}", stats.words);
+        print!("{} ", stats.words);
     }
     if options.print_bytes {
-        println!("Bytes: {}", stats.bytes);
+        print!("{} ", stats.bytes);
     }
     if options.print_chars {
-        println!("Characters: {}", stats.chars);
+        print!("{} ", stats.chars);
     }
+    println!("{}", file_path);
 }
